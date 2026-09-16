@@ -17,18 +17,26 @@ import java.util.List;
 
 @Mixin(FilePackResources.FileResourcesSupplier.class)
 public abstract class FileResourcesSupplierMixin {
-    @Inject(method = "openFull", at = @At(value = "RETURN", ordinal = 0))
+    //? if >= 26.3 {
+    @Inject(method = "openResources", at = @At(value = "RETURN", ordinal = 0))
+    //? } else {
+    //@Inject(method = "openFull", at = @At(value = "RETURN", ordinal = 0))
+    //? }
     public void initializeFileTree(
-        PackLocationInfo location, Pack.Metadata metadata, CallbackInfoReturnable<PackResources> cir,
+        PackLocationInfo location, Pack.Metadata metadata, CallbackInfoReturnable cir,
         @Local PackResources primary,
         @Local FilePackResources.SharedZipFileAccess zipFileAccess
     ) {
         QuickPack.initializeFileTrees(((SharedZipFileAccessAccessor) zipFileAccess).invokeGetOrCreateZipFile(), List.of(primary));
     }
 
-    @Inject(method = "openFull", at = @At(value = "RETURN", ordinal = 1))
+    //? if >= 26.3 {
+    @Inject(method = "openResources", at = @At(value = "RETURN", ordinal = 1))
+    //? } else {
+    //@Inject(method = "openFull", at = @At(value = "RETURN", ordinal = 1))
+    //? }
     public void initializeFileTrees(
-        PackLocationInfo location, Pack.Metadata metadata, CallbackInfoReturnable<PackResources> cir,
+        PackLocationInfo location, Pack.Metadata metadata, CallbackInfoReturnable cir,
         @Local PackResources primary,
         @Local(ordinal = 1) List<PackResources> overlayResources,
         @Local FilePackResources.SharedZipFileAccess zipFileAccess
